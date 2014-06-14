@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Build.BuildEngine;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
@@ -8,17 +9,28 @@ namespace ShlugaBuilder.Commands.Specific
     public class MSBuildCommand : ISCommand
     {
         private readonly string _projectFile;
+        private readonly IDictionary<string, string> _globalProperties;
 
         public MSBuildCommand(string[] args)
         {
             _projectFile = args[0];
+
+            _globalProperties = new Dictionary<string, string>(args.Length - 1);
+
+            for (int i = 1; i < args.Length; i++)
+            {
+                var property = args[i].Split('=');
+
+                if(property.Length != 2)
+                    throw new ArgumentException("args isn't in correct format", "args");
+
+                _globalProperties.Add(property[0], property[1]);
+            }
         }
 
         public CommandResult Execute()
         {
-            var globalProperties = new Dictionary<string, string>();
-
-            var buildRequest = new BuildRequestData(_projectFile, globalProperties, null, new[] {"Build"}, null);
+            var buildRequest = new BuildRequestData(_projectFile, _globalProperties, null, new[] {"Build"}, null);
 
             var buildLogEvents = new BuildLogEvents();
 
