@@ -20,7 +20,7 @@ namespace ShlugaBuilder.Commands.Specific
 
             var buildRequest = new BuildRequestData(_projectFile, globalProperties, null, new[] {"Build"}, null);
 
-            var buildLogCache = new BuildLogCache();
+            var buildLogEvents = new BuildLogEvents();
 
             var parameters = new BuildParameters
             {
@@ -29,7 +29,7 @@ namespace ShlugaBuilder.Commands.Specific
                     {
                         new ConfigurableForwardingLogger
                         {
-                            BuildEventRedirector = buildLogCache,
+                            BuildEventRedirector = buildLogEvents,
                             Verbosity = LoggerVerbosity.Quiet,
                         },
                         new ConsoleLogger()
@@ -38,15 +38,15 @@ namespace ShlugaBuilder.Commands.Specific
 
             BuildResult buildResult = BuildManager.DefaultBuildManager.Build(parameters, buildRequest);
 
-            return new CommandResult(buildResult.OverallResult == BuildResultCode.Success, buildLogCache.Messages);
+            return new CommandResult(buildResult.OverallResult == BuildResultCode.Success, buildLogEvents.Messages);
         }
     }
 
-    public class BuildLogCache : IEventRedirector
+    public class BuildLogEvents : IEventRedirector
     {
         private readonly List<string> _messages;
 
-        public BuildLogCache()
+        public BuildLogEvents()
         {
             _messages = new List<string>();
         }
