@@ -44,7 +44,7 @@ namespace ShlugaBuilder.Commands.Specific
                             BuildEventRedirector = buildLogEvents,
                             Verbosity = LoggerVerbosity.Quiet,
                         },
-                        new ConsoleLogger()
+                        new ConsoleLogger(),
                     }
             };
 
