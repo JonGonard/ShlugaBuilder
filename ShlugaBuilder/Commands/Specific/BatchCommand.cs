@@ -9,7 +9,7 @@ namespace ShlugaBuilder.Commands.Specific
         private readonly List<string> _errors;
         private readonly ProcessStartInfo _processInfo;
 
-        public BatchCommand(string commandName, params string[] args)
+        public BatchCommand(string commandName, IList<string> args)
         {
             string arguments = args.AggregateAppend(false);
 

@@ -6,22 +6,23 @@ using Microsoft.Build.Framework;
 
 namespace ShlugaBuilder.Commands.Specific
 {
+    [SCommandMetaData("Build", new[] {"Project Path"})]
     public class MSBuildCommand : ISCommand
     {
-        private readonly string _projectFile;
         private readonly IDictionary<string, string> _globalProperties;
+        private readonly string _projectFile;
 
-        public MSBuildCommand(string[] args)
+        public MSBuildCommand(IList<string> args)
         {
             _projectFile = args[0];
 
-            _globalProperties = new Dictionary<string, string>(args.Length - 1);
+            _globalProperties = new Dictionary<string, string>(args.Count - 1);
 
-            for (int i = 1; i < args.Length; i++)
+            for (int i = 1; i < args.Count; i++)
             {
-                var property = args[i].Split('=');
+                string[] property = args[i].Split('=');
 
-                if(property.Length != 2)
+                if (property.Length != 2)
                     throw new ArgumentException("args isn't in correct format", "args");
 
                 _globalProperties.Add(property[0], property[1]);
@@ -44,7 +45,7 @@ namespace ShlugaBuilder.Commands.Specific
                             BuildEventRedirector = buildLogEvents,
                             Verbosity = LoggerVerbosity.Quiet,
                         },
-                        new ConsoleLogger(),
+                        new ConsoleLogger()
                     }
             };
 
