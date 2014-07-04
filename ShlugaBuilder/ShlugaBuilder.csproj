@@ -52,6 +52,7 @@
     <Compile Include="Commands\ISCommand.cs" />
     <Compile Include="Commands\Specific\BatchCommand.cs" />
     <Compile Include="Commands\Specific\MSBuildCommand.cs" />
+    <Compile Include="Commands\StringsHelper.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
