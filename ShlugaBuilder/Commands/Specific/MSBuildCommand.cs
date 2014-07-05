@@ -11,18 +11,18 @@ namespace ShlugaBuilder.Commands.Specific
     public class MSBuildCommand : ISCommand
     {
         private readonly IDictionary<string, string> _globalProperties;
-        private readonly string _projectFile;
+        internal readonly string ProjectFile;
 
-        public MSBuildCommand(IList<string> args)
+        public MSBuildCommand(string[] args)
         {
-            _projectFile = args[0];
+            ProjectFile = args[0].Trim('"');
 
-            if (!File.Exists(_projectFile))
+            if (!File.Exists(ProjectFile))
                 throw new ArgumentException("Project file Doesn't exist", "args");
 
-            _globalProperties = new Dictionary<string, string>(args.Count - 1);
+            _globalProperties = new Dictionary<string, string>(args.Length - 1);
 
-            for (int i = 1; i < args.Count; i++)
+            for (int i = 1; i < args.Length; i++)
             {
                 string[] property = args[i].Split('=');
 
@@ -35,7 +35,7 @@ namespace ShlugaBuilder.Commands.Specific
 
         public CommandResult Execute()
         {
-            var buildRequest = new BuildRequestData(_projectFile, _globalProperties, null, new[] {"Build"}, null);
+            var buildRequest = new BuildRequestData(ProjectFile, _globalProperties, null, new[] {"Build"}, null);
 
             var buildLogEvents = new BuildLogEvents();
 

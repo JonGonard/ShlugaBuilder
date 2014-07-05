@@ -42,6 +42,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\SCommandFactoryTests.cs" />
     <Compile Include="Commands\Specific\BatchCommandTests.cs" />
     <Compile Include="Commands\Specific\MSBuildCommandTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -57,7 +58,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>xcopy $(SolutionDir)\TestResoruces c:\TestResources /s /e /i /y</PreBuildEvent>
+    <PreBuildEvent>xcopy $(SolutionDir)\TestResources c:\TestResources /s /e /i /y</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
