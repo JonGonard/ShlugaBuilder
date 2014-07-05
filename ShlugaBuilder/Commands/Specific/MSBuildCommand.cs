@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using Microsoft.Build.BuildEngine;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
@@ -15,6 +16,9 @@ namespace ShlugaBuilder.Commands.Specific
         public MSBuildCommand(IList<string> args)
         {
             _projectFile = args[0];
+
+            if (!File.Exists(_projectFile))
+                throw new ArgumentException("Project file Doesn't exist", "args");
 
             _globalProperties = new Dictionary<string, string>(args.Count - 1);
 

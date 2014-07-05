@@ -15,8 +15,18 @@ namespace ShlugaBuilder.Tests.Commands.Specific
         private const string CompilingProject = @"CompilingSolution\CompilingProject\CompilingProject.csproj";
 
         private const string NonCompilingSolution = @"NonCompilingSolution\NonCompilingSolution.sln";
+
         private const string NonCompilingProject =
             @"NonCompilingSolution\NonCompilingProject\NonCompilingProject.csproj";
+
+        [Test]
+        [ExpectedException(typeof (ArgumentException))]
+        public void CompileNonExistingProject_CommandFaild()
+        {
+            // ReSharper disable ObjectCreationAsStatement
+            new MSBuildCommand(new[] {@"c:\Foo\Bar.sln"});
+            // ReSharper restore ObjectCreationAsStatement
+        }
 
         [Test]
         public void CompileOKProject_BuildSucceedNoErrors()
@@ -44,6 +54,34 @@ namespace ShlugaBuilder.Tests.Commands.Specific
             Assert.IsTrue(result.Success, result.Errors.AggregateAppend());
 
             Assert.AreEqual(0, result.Errors.Count);
+        }
+
+        [Test]
+        public void CompileWithCorrectProperties_BuildSucceedNoErrors()
+        {
+            string projectPath = Path.Combine(ResourcesPath, CompilingProject);
+
+            var command = new MSBuildCommand(new[] {projectPath, "Configuration=Debug"});
+
+            CommandResult result = command.Execute();
+
+            Assert.IsTrue(result.Success, result.Errors.AggregateAppend());
+
+            Assert.AreEqual(0, result.Errors.Count);
+        }
+
+        [Test]
+        public void CompileWithIncorrectProperties_BuildFailsHasErrors()
+        {
+            string projectPath = Path.Combine(ResourcesPath, CompilingProject);
+
+            var command = new MSBuildCommand(new[] {projectPath, "Configuration=Foo"});
+
+            CommandResult result = command.Execute();
+
+            Assert.IsFalse(result.Success, result.Errors.AggregateAppend());
+
+            Assert.AreNotEqual(0, result.Errors.Count);
         }
 
         [Test]
@@ -82,34 +120,5 @@ namespace ShlugaBuilder.Tests.Commands.Specific
             new MSBuildCommand(new[] {"Foo", "Bar"});
 // ReSharper restore ObjectCreationAsStatement
         }
-
-        [Test]
-        public void CompileWithCorrectPropties_BuildSucceedNoErrors()
-        {
-            string projectPath = Path.Combine(ResourcesPath, CompilingProject);
-
-            var command = new MSBuildCommand(new[] { projectPath, "Configuration=Debug" });
-
-            CommandResult result = command.Execute();
-
-            Assert.IsTrue(result.Success, result.Errors.AggregateAppend());
-
-            Assert.AreEqual(0, result.Errors.Count);
-        }
-
-        [Test]
-        public void CompileWithIncorrectPropties_BuildFailsHasErrors()
-        {
-            string projectPath = Path.Combine(ResourcesPath, CompilingProject);
-
-            var command = new MSBuildCommand(new[] { projectPath, "Configuration=Foo" });
-
-            CommandResult result = command.Execute();
-
-            Assert.IsFalse(result.Success, result.Errors.AggregateAppend());
-
-            Assert.AreNotEqual(0, result.Errors.Count);
-        }
-
     }
 }
